@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="12dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Please select your range preferences"
+        android:id="@+id/textView"
+        android:layout_marginTop="58dp"
+        android:layout_alignStart="@+id/spinner" />
+
+    <Spinner
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:entries="@array/items"
+        android:prompt="@string/parameter_prompt"
+        android:layout_marginTop="46dp"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true">
+    </Spinner>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Select StartDate"
+        android:id="@+id/date_tv_start"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_below="@+id/spinner"
+        android:layout_alignStart="@+id/spinner" />
+
+    <ImageButton
+        android:id="@+id/date_btn_picker_start"
+        android:src="@drawable/ic_date_range_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner"
+        android:layout_alignStart="@+id/date_btn_picker_stop" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Select StartDate"
+        android:id="@+id/date_tv_stop"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="15dp"
+        android:layout_below="@+id/date_tv_start"
+        android:layout_alignStart="@+id/spinner" />
+
+    <ImageButton
+        android:id="@+id/date_btn_picker_stop"
+        android:src="@drawable/ic_date_range_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/date_tv_stop"
+        android:layout_toEndOf="@+id/date_tv_stop"
+        android:layout_marginStart="75dp" />
+
+</RelativeLayout>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">WeighingGraphsMP</string>
+    <string name="parameter_prompt">Choose a parameter</string>
+
+    <string-array name="items">
+        <item name="Choose">Choose</item>
+        <item name="Hourly">Hourly</item>
+        <item name="Daily">Daily</item>
+        <item name="weekly">Weekly</item>
+    </string-array>
+</resources>
