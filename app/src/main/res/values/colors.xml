@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#37474F</color>
+    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorAccent">#F44336</color>
     <color name="greenMaterial">#4CAF50</color>
     <color name="blueBase">#03A9F4</color>
     <color name="limeBase">#CDDC39</color>
     <color name="orangeBase">#FF9800</color>
+    <color name="belizeHole">#2980b9</color>
+    <color name="carrot">#e67e22</color>
+    <color name="sunFlower">#f1c40f</color>
+    <color name="peterRiver">#3498db</color>
+    <color name="darkGreen">#0C545C</color>
+    <color name="dullRed">#FE6860</color>
+    <color name="fadedBlack">#424242</color>
+
+    <color name="background_card">#fff</color>
+    <color name="background_snackbar">#323232</color>
+
+    <color name="text_black_87">#de000000</color>
+    <color name="text_white_87">#deFFFFFF</color>
+
+    <array name="note_neutral_colors">
+        <item>#9E9E9E</item>
+        <item>#455A64</item>
+        <item>#607D8B</item>
+    </array>
+
+    <array name="note_accent_colors">
+        <item>#039BE5</item>
+        <item>#3D51B3</item>
+        <item>#689f38</item>
+        <item>#FD7044</item>
+    </array>
 </resources>

@@ -1,21 +1,27 @@
 package example.com.weighinggraphsmp;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,11 +42,13 @@ import com.github.mikephil.charting.formatter.FillFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.gson.Gson;
+import com.gordonwong.materialsheetfab.MaterialSheetFab;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements  View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements
+        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     private LineChart mChart;
     private String TAG = "MAINACTIVITY";
@@ -53,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     private TextView tvStopDate ;
     private ImageButton btnStartPicker ;
     private ImageButton btnStopPicker ;
+    private Button plotPickerButton ;
 
     private DatePickerDialog datePickerDialog;
     private int mYear;
@@ -66,6 +75,20 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     private Toolbar tbActionBar ;
 
     private SwipeRefreshLayout swipeRefreshLayout ;
+
+    private FabModified fabModified ;
+    private MaterialSheetFab<FabModified> materialSheetFab ;
+    private View overlayView ;
+    private View sheetView ;
+
+    private int plotChoice = 0 ;
+
+    private AlertDialog.Builder alertDialog ;
+    /**
+     * 0 - Weight against time
+     * 1 - Air Quality against time
+     * 2 - Temperature against time
+     * */
 
 
     //private Typeface tf;
@@ -115,10 +138,41 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout) ;
 
+        fabModified = (FabModified) findViewById(R.id.floating_action_button) ;
+        overlayView = findViewById(R.id.activity_main_overlay) ;
+        sheetView = findViewById(R.id.fab_sheet) ;
+
+        plotPickerButton = (Button) findViewById(R.id.main_plotX_btn) ;
+
+        plotPickerButton.setOnClickListener(this);
         btnStartPicker.setOnClickListener(this);
         btnStopPicker.setOnClickListener(this);
 
         swipeRefreshLayout.setOnRefreshListener(this);
+
+
+        int sheetColor = getResources().getColor(R.color.fadedBlack);
+        int fabColor = getResources().getColor(R.color.dullRed);
+
+        // Initialize material sheet FAB
+        materialSheetFab = new MaterialSheetFab<>(fabModified, sheetView, overlayView,
+                sheetColor, fabColor);
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (materialSheetFab.isSheetVisible()) {
+            materialSheetFab.hideSheet();
+        } else {
+            super.onBackPressed();
+        }
+
+    }
+
+    private void handleItemSelected(int pos) {
+        setData(chartElementsList.getChartElements().size(), 100, pos);
 
     }
 
@@ -126,30 +180,21 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
         mChart = (LineChart) findViewById(R.id.chart1);
         mChart.setViewPortOffsets(0, 20, 0, 0);
-        mChart.setBackgroundColor(getResources().getColor(R.color.blueBase));
-
+        mChart.setBackgroundColor(getResources().getColor(R.color.fadedBlack));
         mChart.setDescription("Weight against date plot");
 
-        // enable touch gestures
         mChart.setTouchEnabled(true);
-
-        // enable scaling and dragging
+        mChart.setAutoScaleMinMaxEnabled(true) ;
         mChart.setDragEnabled(true);
         mChart.setScaleEnabled(true);
-
-        // if disabled, scaling can be done on x- and y-axis separately
         mChart.setPinchZoom(false);
-
         mChart.setDrawGridBackground(false);
-
-        // tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
 
         XAxis x = mChart.getXAxis();
         x.setEnabled(false);
 
         YAxis y = mChart.getAxisLeft();
-        //y.setTypeface(tf);
-        y.setLabelCount(6, false);
+        y.setLabelCount(9, false);
         y.setTextColor(Color.DKGRAY);
         y.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
         y.setDrawGridLines(false);
@@ -158,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         mChart.getAxisRight().setEnabled(false);
 
         fetchData() ;
-
+        //setData(chartElementsList.getChartElements().size(), 100, plotChoice);
         // add data
 
 
@@ -211,6 +256,8 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
 
             ExtractDateTime(i, chartElementsList.getChartElements().get(i).getTime());
 
+            //chartElementsList.getChartElements().get(i).setAirQuality(Float.toString(Float.parseFloat(chartElementsList.getChartElements().get(i).getAirQuality())/10));
+
             Log.d(TAG, "INSIDE called with: " +
                     count++ + " " +
                     chartElementsList.getChartElements().get(i).getAirQuality() + " " +
@@ -218,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
                     chartElementsList.getChartElements().get(i).getWeight() + " " +
                     chartElementsList.getChartElements().get(i).getTime() );
         }
-        setData(chartElementsList.getChartElements().size(), 100);
+        setData(chartElementsList.getChartElements().size(), 100, plotChoice);
 
 
     }
@@ -239,13 +286,12 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     }
 
 
-    private void setData(int count, float range) {
+    private void setData(int count, float range, int plotChoiceLocal) {
 
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < count; i++) {
             xVals.add((20 +i) + "");
         }
-
 
         ArrayList<Entry> vals1 = new ArrayList<Entry>();
 
@@ -253,38 +299,56 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         for (int i = 0; i < chartElementsList.getChartElements().size(); i++) {
             listChartElement[i] = chartElementsList.getChartElements().get(i) ;
         }
-
         Arrays.sort(listChartElement) ;
 
-        for (int i = 0; i < listChartElement.length; i++) {
-            listChartElement[i].printData();
-        }
 
+        /*for (int i = 0; i < listChartElement.length; i++) {
+            listChartElement[i].printData();
+        }*/
+
+        switch (plotChoiceLocal){
+            case 0:
+                for(int i=0 ; i<19 ; i++){
+                    vals1.add(new Entry(Float.parseFloat(chartElementsList.getChartElements().get(i).getWeight()),
+                            i)) ;
+                }
+                break;
+            case 1:
+                for(int i=0 ; i<19 ; i++){
+                    vals1.add(new Entry(Float.parseFloat(chartElementsList.getChartElements().get(i).getAirQuality()),
+                            i)) ;
+                }
+                break;
+            case 2:
+                for(int i=0 ; i<19 ; i++){
+                    vals1.add(new Entry(Float.parseFloat(chartElementsList.getChartElements().get(i).getTemperature()),
+                            i)) ;
+                }
+                break;
+
+        }
 
         /*for(int i=0 ; i<19 ; i++){
             vals1.add(new Entry(Float.parseFloat(chartElementsList.getChartElements().get(i).getAirQuality()),
                     Integer.parseInt(chartElementsList.getChartElements().get(i).getDate()))) ;
         }*/
 
-        for(int i=0 ; i<19 ; i++){
-            vals1.add(new Entry(Float.parseFloat(chartElementsList.getChartElements().get(i).getAirQuality()),
-                    i)) ;
-        }
+
 
 
         // create a dataset and give it a type
         LineDataSet set1 = new LineDataSet(vals1, "DataSet 1");
         set1.setDrawCubic(true);
-        set1.setCubicIntensity(0.2f);
+        set1.setCubicIntensity(0.3f);
         set1.setDrawFilled(true);
         set1.setDrawCircles(true);
         set1.setLineWidth(1.8f);
         set1.setCircleRadius(4f);
-        set1.setCircleColor(Color.RED);
+        set1.setCircleColor(getResources().getColor(R.color.fadedBlack));
         set1.setHighLightColor(Color.rgb(244, 117, 117));
         set1.setColor(Color.WHITE);
-        set1.setFillColor(getResources().getColor(R.color.orangeBase));
-        set1.setFillAlpha(100);
+        set1.setFillColor(getResources().getColor(R.color.dullRed));
+        set1.setFillAlpha(255);
         set1.setDrawHorizontalHighlightIndicator(false);
         set1.setFillFormatter(new FillFormatter() {
             @Override
@@ -325,6 +389,24 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
                         }, mYear, mMonth, mDay);
                 //datePickerDialog.show();
                 break;
+            case R.id.main_plotX_btn:
+
+                String names[] ={"Weight","Air Quality","Temperature"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Plot time against")
+                        .setItems(names, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                setData(chartElementsList.getChartElements().size(), 100, which);
+                            }
+                        });
+                builder.create();
+                builder.show() ;
+                /**
+                * Get a choice return
+                * */
+                fetchData();
+                break;
         }
 
 
@@ -335,4 +417,6 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         swipeRefreshLayout.setRefreshing(true);
         fetchData();
     }
+
+
 }
