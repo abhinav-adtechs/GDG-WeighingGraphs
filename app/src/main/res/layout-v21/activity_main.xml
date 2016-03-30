@@ -61,6 +61,7 @@
 
         <android.support.v7.widget.CardView
             android:id="@+id/fab_sheet"
+            style="@style/Widget.MaterialSheetFab.Sheet"
             android:layout_width="250dp"
             android:layout_height="300dp">
 
@@ -71,20 +72,28 @@
 
                 <TextView
                     android:text="Weight"
-                    android:layout_width="wrap_content"
-                    android:textSize="30dp"
+                    android:textAlignment="center"
+                    android:textSize="20dp"
+                    android:drawableLeft="@drawable/weight"
+                    android:drawableStart="@drawable/weight"
+                    android:layout_width="fill_parent"
+                    style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:text="Air Quality"
-                    android:textSize="30dp"
-                    android:layout_width="wrap_content"
+                    android:drawableLeft="@drawable/airquality"
+                    android:drawableStart="@drawable/airquality"
+                    style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:text="Temperature"
-                    android:textSize="30dp"
-                    android:layout_width="wrap_content"
+                    style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
+                    android:drawableLeft="@drawable/temperature"
+                    android:drawableStart="@drawable/temperature"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
