@@ -73,10 +73,9 @@
                 <TextView
                     android:text="Weight"
                     android:textAlignment="center"
-                    android:textSize="20dp"
                     android:drawableLeft="@drawable/weight"
                     android:drawableStart="@drawable/weight"
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     style="@style/TextAppearance.MaterialSheetFab.Sheet.Item"
                     android:layout_height="wrap_content" />
 
